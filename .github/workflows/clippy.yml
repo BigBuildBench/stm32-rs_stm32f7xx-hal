@@ -1,0 +1,17 @@
+on: [push, pull_request]
+
+name: Clippy
+
+jobs:
+  clippy_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          components: clippy
+          toolchain: 1.80.0
+          targets: thumbv7em-none-eabihf
+      # TODO: For now, allow clippy::erasing_op
+      # TODO: Enable clippy on examples via `--examples`
+      - run: cargo clippy --target thumbv7em-none-eabihf --features=rt,stm32f746 -- --allow clippy::erasing_op
